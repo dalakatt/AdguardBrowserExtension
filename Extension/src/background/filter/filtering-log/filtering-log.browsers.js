@@ -24,7 +24,7 @@ import { prefs } from '../../prefs';
 import { listeners } from '../../notifier';
 import { translator } from '../../../common/translators/translator';
 import { RequestTypes } from '../../utils/request-types';
-import { ANTIBANNER_FILTERS_ID } from '../../../common/constants';
+import { AntiBannerFiltersId } from '../../../common/constants';
 import { userrules } from '../userrules';
 
 /**
@@ -174,7 +174,7 @@ const browsersFilteringLog = (function () {
             if (sourceRule.isDocumentLevelAllowlistRule()) {
                 destinationRuleDTO.documentLevelRule = true;
             }
-            if (sourceRule.getFilterListId() === ANTIBANNER_FILTERS_ID.STEALTH_MODE_FILTER_ID) {
+            if (sourceRule.getFilterListId() === AntiBannerFiltersId.STEALTH_MODE_FILTER_ID) {
                 destinationRuleDTO.isStealthModeRule = true;
             }
 
@@ -194,7 +194,7 @@ const browsersFilteringLog = (function () {
             }
         }
 
-        if (sourceRule.getFilterListId() === ANTIBANNER_FILTERS_ID.USER_FILTER_ID) {
+        if (sourceRule.getFilterListId() === AntiBannerFiltersId.USER_FILTER_ID) {
             const originalRule = userrules.getSourceRule(sourceRule.getText());
             if (originalRule) {
                 destinationRuleDTO.ruleText = originalRule;

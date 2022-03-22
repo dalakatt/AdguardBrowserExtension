@@ -1,6 +1,6 @@
 import { MessageType } from '../../common/messages';
 import { messageHandler } from '../message-handler';
-
+import { userSettingsStorage } from './settings/user-settings-storage';
 import stubData from './popup-stub-data.json';
 
 export class PopupService {
@@ -10,6 +10,9 @@ export class PopupService {
 
     // TODO: implement
     static getTabInfoForPopup() {
-        return Promise.resolve(stubData);
+        return Promise.resolve({
+            ...stubData,
+            settings: userSettingsStorage.getData(),
+        });
     }
 }

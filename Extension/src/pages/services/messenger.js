@@ -111,11 +111,8 @@ class Messenger {
         return res;
     }
 
-    // eslint-disable-next-line class-methods-use-this
     async changeUserSetting(settingId, value) {
-        // FIXME refactor message handler to use common message format { type, data }
-        await browser.runtime.sendMessage({
-            type: MessageType.CHANGE_USER_SETTING,
+        await this.sendMessage(MessageType.CHANGE_USER_SETTING, {
             key: settingId,
             value,
         });

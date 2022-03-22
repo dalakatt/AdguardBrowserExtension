@@ -334,6 +334,7 @@ const createMessageHandler = () => {
             case MessageType.LOAD_CUSTOM_FILTER_INFO:
                 try {
                     const { url, title } = data;
+                    // eslint-disable-next-line @typescript-eslint/return-await
                     return application.loadCustomFilterInfo(url, { title });
                 } catch (e) {
                     return {};

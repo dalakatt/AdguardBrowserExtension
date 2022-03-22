@@ -32,7 +32,7 @@ import { userrules } from './filter/userrules';
 import { browserUtils } from './utils/browser-utils';
 import { log } from '../common/log';
 import { runtimeImpl } from '../common/common-script';
-import { MessageType, ANTIBANNER_FILTERS_ID } from '../common/constants';
+import { MessageType, AntiBannerFiltersId } from '../common/constants';
 import { translator } from '../common/translators/translator';
 
 /**
@@ -658,7 +658,7 @@ export const uiService = (function () {
             .join('&');
 
         // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1937
-        const isRemoveUrlParamsEnabled = filterIds.includes(ANTIBANNER_FILTERS_ID.URL_TRACKING_FILTER_ID);
+        const isRemoveUrlParamsEnabled = filterIds.includes(AntiBannerFiltersId.URL_TRACKING_FILTER_ID);
         if (isRemoveUrlParamsEnabled) {
             stealthOptionsString = `${stealthOptionsString}&stealth.strip_url=true`;
         }

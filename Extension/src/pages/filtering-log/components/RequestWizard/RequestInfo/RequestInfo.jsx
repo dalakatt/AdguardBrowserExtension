@@ -15,7 +15,7 @@ import { rootStore } from '../../../stores/RootStore';
 import { ADDED_RULE_STATES } from '../../../stores/WizardStore';
 import { messenger } from '../../../../services/messenger';
 import { reactTranslator } from '../../../../../common/translators/reactTranslator';
-import { ANTIBANNER_FILTERS_ID, STEALTH_ACTIONS } from '../../../../../common/constants';
+import { AntiBannerFiltersId, STEALTH_ACTIONS } from '../../../../../common/constants';
 import { Icon } from '../../../../common/components/ui/Icon';
 import { CopyToClipboard } from '../../../../common/components/CopyToClipboard';
 import { NetworkStatus, FilterStatus } from '../../Status';
@@ -98,7 +98,7 @@ const getRule = (selectedEvent) => {
     if (
         requestRule?.allowlistRule
         && requestRule?.documentLevelRule
-        && requestRule?.filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID
+        && requestRule?.filterId === AntiBannerFiltersId.ALLOWLIST_FILTER_ID
     ) {
         return null;
     }
@@ -417,7 +417,7 @@ const RequestInfo = observer(() => {
 
         if (!requestRule) {
             buttonProps = BUTTON_MAP.BLOCK;
-        } else if (requestRule.filterId === ANTIBANNER_FILTERS_ID.USER_FILTER_ID) {
+        } else if (requestRule.filterId === AntiBannerFiltersId.USER_FILTER_ID) {
             buttonProps = BUTTON_MAP.USER_FILTER;
             if (requestRule.isStealthModeRule) {
                 buttonProps = BUTTON_MAP.UNBLOCK;
@@ -431,7 +431,7 @@ const RequestInfo = observer(() => {
                     </>
                 );
             }
-        } else if (requestRule.filterId === ANTIBANNER_FILTERS_ID.ALLOWLIST_FILTER_ID) {
+        } else if (requestRule.filterId === AntiBannerFiltersId.ALLOWLIST_FILTER_ID) {
             buttonProps = BUTTON_MAP.ALLOWLIST;
         } else if (!requestRule.allowlistRule) {
             buttonProps = BUTTON_MAP.UNBLOCK;

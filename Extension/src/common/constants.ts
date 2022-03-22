@@ -2,22 +2,22 @@ export * from './messages';
 /**
  * Filter ids used in the code on the background page and filtering log page
  */
-export const ANTIBANNER_FILTERS_ID = {
-    STEALTH_MODE_FILTER_ID: -1,
-    USER_FILTER_ID: 0,
-    RUSSIAN_FILTER_ID: 1,
-    ENGLISH_FILTER_ID: 2,
-    TRACKING_FILTER_ID: 3,
-    SOCIAL_FILTER_ID: 4,
-    SEARCH_AND_SELF_PROMO_FILTER_ID: 10,
-    URL_TRACKING_FILTER_ID: 17,
-    ALLOWLIST_FILTER_ID: 100,
-    EASY_PRIVACY: 118,
-    FANBOY_ANNOYANCES: 122,
-    FANBOY_SOCIAL: 123,
-    FANBOY_ENHANCED: 215,
-    MOBILE_ADS_FILTER_ID: 11,
-} as const;
+export enum AntiBannerFiltersId {
+    STEALTH_MODE_FILTER_ID = -1,
+    USER_FILTER_ID = 0,
+    RUSSIAN_FILTER_ID = 1,
+    ENGLISH_FILTER_ID = 2,
+    TRACKING_FILTER_ID = 3,
+    SOCIAL_FILTER_ID = 4,
+    SEARCH_AND_SELF_PROMO_FILTER_ID = 10,
+    URL_TRACKING_FILTER_ID = 17,
+    ALLOWLIST_FILTER_ID = 100,
+    EASY_PRIVACY = 118,
+    FANBOY_ANNOYANCES = 122,
+    FANBOY_SOCIAL = 123,
+    FANBOY_ENHANCED = 215,
+    MOBILE_ADS_FILTER_ID = 11,
+}
 
 /**
  * Group ids used in the code on the multiple entry points

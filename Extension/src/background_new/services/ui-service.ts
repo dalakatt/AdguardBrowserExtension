@@ -2,10 +2,12 @@ import browser from 'webextension-polyfill';
 
 import { messageHandler } from '../message-handler';
 import { MessageType, OpenAbuseTabMessage, OpenSiteReportTabMessage } from '../../common/messages';
-import { userAgentParser } from '../../common/userAgentParser';
+import { UserAgent } from '../../common/user-agent';
 import { TabsApi } from '../extension-api/tabs';
 import { tsWebExtension } from '../tswebextension';
 import { UrlUtils } from '../utils/url';
+import { userSettingsStorage } from './settings/user-settings-storage';
+import { UserSettingOption } from '../../common/settings';
 
 export class UiService {
     static baseUrl = browser.runtime.getURL('/');
@@ -47,18 +49,10 @@ export class UiService {
     static async openAbuseTab({ data }: OpenAbuseTabMessage): Promise<void> {
         const { url } = data;
 
-        let browserName = userAgentParser.getBrowserName();
+        let { browserName } = UserAgent;
         let browserDetails: string | undefined;
 
-        // TODO: list of supported browsers (move to common?)
-        // https://github.com/lancedikson/bowser#filtering-browsers
-        const isSupportedBrowser = userAgentParser.satisfies({
-            chrome: '>=79',
-            firefox: '>=78',
-            opera: '>=66',
-        });
-
-        if (!isSupportedBrowser) {
+        if (!UserAgent.isSupportedBrowser) {
             browserDetails = browserName;
             browserName = 'Other';
         }
@@ -75,17 +69,6 @@ export class UiService {
             }${UiService.getStealthString(filterIds)
             }${UiService.getBrowserSecurityString()}`,
         });
-    }
-
-    // TODO: implement when settings service will be created (move to steath service?)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static getStealthString(filterId: number[]): string {
-        return '';
-    }
-
-    // TODO: implement when settings service will be created
-    static getBrowserSecurityString(): string {
-        return '';
     }
 
     static async openSiteReportTab({ data }: OpenSiteReportTabMessage): Promise<void> {
@@ -114,5 +97,79 @@ export class UiService {
 
     static getExtensionPageUrl(path: string) {
         return `${UiService.baseUrl}pages/${path}`;
+    }
+
+    static getBrowserSecurityString(): string {
+        const isEnabled = !userSettingsStorage.get(UserSettingOption.DISABLE_SAFEBROWSING);
+        return `&browsing_security.enabled=${isEnabled}`;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static getStealthString(filterIds: number[]): string {
+        const stealthEnabled = !userSettingsStorage.get(UserSettingOption.DISABLE_STEALTH_MODE);
+
+        if (!stealthEnabled) {
+            return '&stealth.enabled=false';
+        }
+        const stealthOptions = [
+            {
+                queryKey: 'ext_hide_referrer',
+                settingKey: UserSettingOption.HIDE_REFERRER,
+            },
+            {
+                queryKey: 'hide_search_queries',
+                settingKey: UserSettingOption.HIDE_SEARCH_QUERIES,
+            },
+            {
+                queryKey: 'DNT',
+                settingKey: UserSettingOption.SEND_DO_NOT_TRACK,
+            },
+            {
+                queryKey: 'x_client',
+                settingKey: UserSettingOption.BLOCK_CHROME_CLIENT_DATA,
+            },
+            {
+                queryKey: 'webrtc',
+                settingKey: UserSettingOption.BLOCK_WEBRTC,
+            },
+            {
+                queryKey: 'third_party_cookies',
+                settingKey: UserSettingOption.SELF_DESTRUCT_THIRD_PARTY_COOKIES,
+                settingValueKey: UserSettingOption.SELF_DESTRUCT_THIRD_PARTY_COOKIES_TIME,
+            },
+            {
+                queryKey: 'first_party_cookies',
+                settingKey: UserSettingOption.SELF_DESTRUCT_FIRST_PARTY_COOKIES,
+                settingValueKey: UserSettingOption.SELF_DESTRUCT_FIRST_PARTY_COOKIES_TIME,
+            },
+        ];
+
+        const stealthOptionsString = stealthOptions.map((option) => {
+            const { queryKey, settingKey, settingValueKey } = option;
+            const setting = userSettingsStorage.get(settingKey);
+            let settingString: string;
+            if (!setting) {
+                return '';
+            }
+            if (!settingValueKey) {
+                settingString = setting.toString();
+            } else {
+                settingString = userSettingsStorage.get(settingValueKey).toString();
+            }
+            return `stealth.${queryKey}=${encodeURIComponent(settingString)}`;
+        })
+            .filter(string => string.length > 0)
+            .join('&');
+
+        // TODO: implement when filters service will be created)
+        // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/1937
+        /*
+        const isRemoveUrlParamsEnabled = filterIds.includes(AntiBannerFiltersId.URL_TRACKING_FILTER_ID);
+        if (isRemoveUrlParamsEnabled) {
+            stealthOptionsString = `${stealthOptionsString}&stealth.strip_url=true`;
+        }
+        */
+
+        return `&stealth.enabled=true&${stealthOptionsString}`;
     }
 }

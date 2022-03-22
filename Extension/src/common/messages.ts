@@ -1,3 +1,5 @@
+import { UserSettingOption, UserSettings } from './settings';
+
 /**
  * Message types used for message passing between background page and
  * other pages (popup, filtering log, content scripts)
@@ -122,6 +124,18 @@ export type GetOptionsDataMessage = {
   type: MessageType.GET_OPTIONS_DATA;
 };
 
+export type ChangeUserSettingMessage<T extends UserSettingOption = UserSettingOption> = {
+  type: MessageType.CHANGE_USER_SETTING;
+  data: {
+    key: T,
+    value: UserSettings[T]
+  }
+};
+
+export type ResetSettingsMessage = {
+  type: MessageType.RESET_SETTINGS
+};
+
 export type Message = (
   | GetTabInfoForPopupMessage
   | ChangeApplicationFilteringDisabledMessage
@@ -131,6 +145,8 @@ export type Message = (
   | OpenAbuseTabMessage
   | OpenSiteReportTabMessage
   | GetOptionsDataMessage
+  | ChangeUserSettingMessage
+  | ResetSettingsMessage
 ) &
   MessageCommonProps;
 
