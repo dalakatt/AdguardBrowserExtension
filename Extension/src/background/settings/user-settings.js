@@ -73,6 +73,10 @@ export const settings = (() => {
         /* UI misc */
         HIDE_RATE_BLOCK: 'hide-rate-block',
         USER_RULES_EDITOR_WRAP: 'user-rules-editor-wrap',
+
+        /* Filtering log size */
+        FILTERING_LOG_DIMENSIONS: 'filtering-log-dimensions',
+        FILTERING_LOG_POSITION: 'filtering-log-position',
     };
 
     const properties = Object.create(null);
@@ -110,6 +114,8 @@ export const settings = (() => {
                 defaults[settings.USER_FILTER_ENABLED] = true;
                 defaults[settings.HIDE_RATE_BLOCK] = false;
                 defaults[settings.USER_RULES_EDITOR_WRAP] = false;
+                defaults[settings.FILTERING_LOG_DIMENSIONS] = {};
+                defaults[settings.FILTERING_LOG_POSITION] = {};
                 return defaults;
             });
         },
@@ -277,6 +283,14 @@ export const settings = (() => {
         return getProperty(settings.ALLOWLIST_ENABLED);
     };
 
+    const setFilteringLogDimensions = (dimensions) => {
+        setProperty(settings.FILTERING_LOG_DIMENSIONS, dimensions);
+    };
+
+    const setFilteringLogPosition = (position) => {
+        setProperty(settings.FILTERING_LOG_POSITION, position);
+    };
+
     /**
      * Sets filters update period after conversion in number
      * @param period
@@ -404,6 +418,8 @@ export const settings = (() => {
     api.changeDefaultAllowlistMode = changeDefaultAllowlistMode;
     api.setAllowlistEnabledState = setAllowlistEnabledState;
     api.getAllowlistEnabledState = getAllowlistEnabledState;
+    api.setFilteringLogDimensions = setFilteringLogDimensions;
+    api.setFilteringLogPosition = setFilteringLogPosition;
     api.getFiltersUpdatePeriod = getFiltersUpdatePeriod;
     api.setFiltersUpdatePeriod = setFiltersUpdatePeriod;
     api.disableShowAdguardPromoInfo = disableShowAdguardPromoInfo;

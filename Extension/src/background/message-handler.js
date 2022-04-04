@@ -421,6 +421,12 @@ const createMessageHandler = () => {
             case MESSAGE_TYPES.OPEN_FILTERING_LOG:
                 uiService.openFilteringLog(message.tabId);
                 break;
+            case MESSAGE_TYPES.SET_FILTERING_LOG_DIMENSIONS:
+                settings.setFilteringLogDimensions(data.dimensions);
+                break;
+            case MESSAGE_TYPES.SET_FILTERING_LOG_POSITION:
+                settings.setFilteringLogPosition(data.position);
+                break;
             case MESSAGE_TYPES.OPEN_FULLSCREEN_USER_RULES:
                 uiService.openFullscreenUserRules();
                 break;
@@ -458,15 +464,7 @@ const createMessageHandler = () => {
                 } else {
                     urlForSelectors = message.documentUrl;
                 }
-
-                // force getting selectors and scripts during browser restart with already open tabs
-                const response = webRequestService.processGetSelectorsAndScripts(
-                    sender.tab,
-                    urlForSelectors,
-                    filteringApi.shouldCollapseAllElements(),
-                );
-
-                return response || {};
+                return webRequestService.processGetSelectorsAndScripts(sender.tab, urlForSelectors) || {};
             }
             case MESSAGE_TYPES.GET_COOKIE_RULES: {
                 if (!utils.url.isHttpOrWsRequest(message.documentUrl) && sender.frameId !== 0) {
@@ -508,7 +506,6 @@ const createMessageHandler = () => {
                     message.documentUrl,
                     message.requestType,
                 );
-
                 return {
                     collapse,
                     requestId: message.requestId,
@@ -621,7 +618,7 @@ const createMessageHandler = () => {
                             showInfoAboutFullVersion: settings.isShowInfoAboutAdguardFullVersion(),
                             isMacOs: browserUtils.isMacOs(),
                             isEdgeBrowser: browserUtils.isEdgeBrowser()
-                                    || browserUtils.isEdgeChromiumBrowser(),
+                                || browserUtils.isEdgeChromiumBrowser(),
                             notification: notifications.getCurrentNotification(),
                             isDisableShowAdguardPromoInfo: settings.isDisableShowAdguardPromoInfo(),
                             hasCustomRulesToReset: await userrules.hasRulesForUrl(frameInfo.url),

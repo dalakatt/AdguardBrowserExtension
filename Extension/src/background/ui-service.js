@@ -727,6 +727,10 @@ export const uiService = (function () {
             inNewWindow,
             type,
             hashParameters,
+            width,
+            height,
+            top,
+            left,
         } = options;
 
         url = appendHashParameters(url, hashParameters);
@@ -758,6 +762,10 @@ export const uiService = (function () {
             type: type || 'normal',
             active: !inBackground,
             inNewWindow,
+            width,
+            height,
+            top,
+            left,
         });
 
         return tab;
@@ -795,7 +803,11 @@ export const uiService = (function () {
 
     const openFilteringLog = async function (tabId) {
         const FILTERING_LOG_PAGE = 'filtering-log.html';
-        const options = { activateSameTab: true, type: 'popup' };
+        const { width, height } = settings.getProperty(settings.FILTERING_LOG_DIMENSIONS);
+        const { top, left } = settings.getProperty(settings.FILTERING_LOG_POSITION);
+        const options = {
+            activateSameTab: true, type: 'popup', width, height, top, left,
+        };
 
         if (!tabId) {
             const tab = await tabsApi.getActive();

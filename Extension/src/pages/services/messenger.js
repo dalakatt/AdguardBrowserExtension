@@ -143,6 +143,14 @@ class Messenger {
         return this.sendMessage(MESSAGE_TYPES.RESET_BLOCKED_ADS_COUNT);
     }
 
+    async setFilteringLogDimensions(dimensions) {
+        return this.sendMessage(MESSAGE_TYPES.SET_FILTERING_LOG_DIMENSIONS, { dimensions });
+    }
+
+    async setFilteringLogPosition(position) {
+        return this.sendMessage(MESSAGE_TYPES.SET_FILTERING_LOG_POSITION, { position });
+    }
+
     async resetSettings() {
         return this.sendMessage(MESSAGE_TYPES.RESET_SETTINGS);
     }

@@ -58,7 +58,7 @@ const FilteringLog = observer(() => {
 
     // append message listeners
     useEffect(() => {
-        let removeListenerCallback = async () => {};
+        let removeListenerCallback = async () => { };
 
         (async () => {
             const events = [
@@ -111,11 +111,26 @@ const FilteringLog = observer(() => {
         };
     }, [logStore]);
 
+    useEffect(() => {
+        window.addEventListener('resize', (e) => {
+            messenger.setFilteringLogDimensions({
+                width: e.currentTarget.innerWidth,
+                height: e.currentTarget.innerHeight,
+            });
+        });
+        window.addEventListener('unload', (e) => {
+            messenger.setFilteringLogPosition({
+                top: e.currentTarget.screenTop,
+                left: e.currentTarget.screenLeft,
+            });
+        });
+    }, [logStore]);
+
     return (
         <>
             <Icons />
             {wizardStore.isModalOpen
-            && <RequestModal />}
+                && <RequestModal />}
             <Filters />
             <FilteringEvents />
         </>

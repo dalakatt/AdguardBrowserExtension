@@ -128,7 +128,9 @@ export const tabsImpl = (function () {
      * @param createData
      */
     const create = async function (createData) {
-        const { url, inNewWindow } = createData;
+        const {
+            url, inNewWindow, width, height, top, left,
+        } = createData;
         const active = createData.active === true;
 
         if (createData.type === 'popup'
@@ -141,8 +143,10 @@ export const tabsImpl = (function () {
             await browser.windows.create({
                 url,
                 type: 'popup',
-                width: 1000,
-                height: 650,
+                width: width || 1000,
+                height: height || 650,
+                top: top || 0,
+                left: left || 0,
             });
             return;
         }
