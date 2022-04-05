@@ -464,7 +464,15 @@ const createMessageHandler = () => {
                 } else {
                     urlForSelectors = message.documentUrl;
                 }
-                return webRequestService.processGetSelectorsAndScripts(sender.tab, urlForSelectors) || {};
+
+                // force getting selectors and scripts during browser restart with already open tabs
+                const response = webRequestService.processGetSelectorsAndScripts(
+                    sender.tab,
+                    urlForSelectors,
+                    filteringApi.shouldCollapseAllElements(),
+                );
+
+                return response || {};
             }
             case MESSAGE_TYPES.GET_COOKIE_RULES: {
                 if (!utils.url.isHttpOrWsRequest(message.documentUrl) && sender.frameId !== 0) {
